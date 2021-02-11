@@ -20,35 +20,30 @@ end
 class Rock < Move
   def losers
     ['lizard', 'scissors']
-    # other_move == Lizard || other_move == Scissors
   end
 end
 
 class Paper < Move
   def losers
     ['rock', 'spock']
-    # other_move == Rock || other_move == Spock
   end
 end
 
 class Scissors < Move
   def losers
     ['lizard', 'paper']
-    # other_move == Lizard || other_move == Paper
   end
 end
 
 class Lizard < Move
   def losers
     ['spock', 'paper']
-    # other_move == Spock || other_move == Paper
   end
 end
 
 class Spock < Move
   def losers
     ['rock', 'scissors']
-    # other_move == Rock || other_move == Scissors
   end
 end
 
@@ -79,7 +74,7 @@ class Human < Player
     loop do
       puts "Please input your name!"
       n = gets.chomp
-      break unless n.empty?
+      break unless n.split.join.empty?
       puts "Please input some value"
     end
     self.name = n
@@ -111,6 +106,7 @@ class Computer < Player
   end
 
   def probabilities
+    # ranges representing probabilities for each move in order [r, p, s, l, sp]
     case name
     when 'R2D77' then [(0..66), (67..69), (70..79), (80..89), (90..99)]
     when 'eyeRobot' then [(0..19), (20..39), (40..59), (60..79), (80..99)]
@@ -162,12 +158,14 @@ class RPSGame
     m = "Hi #{human.name}, and welcome to Rock, Paper, Scissors, Lizard, Spock!"
     puts '-' * m.length
     puts m
+    puts
     puts "The winner will be the first player to #{WINS} wins."
-    puts "Your opponent this game is a robot named #{computer.name}. Good luck!"
+    puts "Your opponent is a robot named #{computer.name}. Good luck!"
     puts '-' * m.length
   end
 
   def display_moves
+    sleep 0.3
     puts "#{human.name} chose #{human.move}"
     puts "#{computer.name} chose #{computer.move}"
   end
@@ -192,14 +190,20 @@ class RPSGame
     end
   end
 
+  def hit_key
+    puts "hit any key to continue"
+    gets.chomp
+  end
+
   def display_score
+    system "clear"
     hs = human.score
     cs = computer.score
     ht = human.ties
-    score = "SCOREBOARD #{human.name}: #{hs}, #{computer.name}: #{cs}, ties: #{ht}"
-    puts "-" * score.length
-    puts score
-    puts "-" * score.length
+    sc = "SCORE => #{human.name}: #{hs}, #{computer.name}: #{cs}, ties: #{ht}"
+    puts "-" * sc.length
+    puts sc
+    puts "-" * sc.length
   end
 
   def display_match_winner
@@ -219,7 +223,7 @@ class RPSGame
     return true if answer == 'y'
   end
 
-  def clear_scores_history
+  def clear_scores
     human.score = 0
     computer.score = 0
     human.ties = 0
@@ -233,44 +237,54 @@ class RPSGame
     human.score == WINS ? human.name : computer.name
   end
 
-  def display_history
-    puts
-    puts "History of moves:"
-    size = human.move_history.size
-
-    0.upto(size - 1) do |idx|
+  def historic_moves
+    0.upto(human.move_history.size - 1) do |idx|
       hmove = human.move_history[idx]
       cmove = computer.move_history[idx]
       puts "#{human.name}: #{hmove.ljust(9)} #{computer.name}: #{cmove}"
     end
+  end
+
+  def display_history
     puts
+    puts "History of moves:"
+    puts "-------------------------------"
+    historic_moves
   end
 
   def display_goodbye_message
     positive = ['amazing', 'awesome', 'the best', 'great', 'a champ'].sample
+    puts
     puts "Many thanks for playing. You are #{positive}! See ya!"
     puts
   end
 
-  def play
-    display_welcome_message
+  def play_framework
     loop do
-      loop do
-        sleep 1.2
-        human.choose
-        computer.choose
-        sleep 0.3
-        system "clear"
-        display_moves
-        update_score
-        display_winner
-        break if game_over?
-        display_score
-      end
+      game_loop
+      system 'clear'
       display_match_winner
       break unless play_again?
-      clear_scores_history
+      clear_scores
     end
+  end
+
+  def game_loop
+    loop do
+      display_score
+      human.choose
+      computer.choose
+      display_moves
+      update_score
+      display_winner
+      hit_key
+      break if game_over?
+    end
+  end
+
+  def play
+    display_welcome_message
+    play_framework
     display_history
     display_goodbye_message
   end
