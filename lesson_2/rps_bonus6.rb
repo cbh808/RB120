@@ -18,30 +18,40 @@ class Move
 end
 
 class Rock < Move
+  private
+
   def losers
     ['lizard', 'scissors']
   end
 end
 
 class Paper < Move
+  private
+
   def losers
     ['rock', 'spock']
   end
 end
 
 class Scissors < Move
+  private
+
   def losers
     ['lizard', 'paper']
   end
 end
 
 class Lizard < Move
+  private
+
   def losers
     ['spock', 'paper']
   end
 end
 
 class Spock < Move
+  private
+
   def losers
     ['rock', 'scissors']
   end
@@ -56,6 +66,8 @@ class Player
     @ties = 0
     @move_history = []
   end
+
+  private
 
   def find_move(choice)
     case choice
@@ -92,6 +104,8 @@ class Human < Player
     move_history << choice
     self.move = find_move(choice)
   end
+
+  private
 
   def refine_choice(str)
     return str if str.size > 3
@@ -132,6 +146,16 @@ end
 # Game Orchestration Engine
 class RPSGame
   WINS = 3
+
+  def play
+    display_welcome_message
+    play_framework
+    display_history
+    display_goodbye_message
+  end
+
+  private
+
   attr_accessor :human, :computer
 
   def initialize
@@ -154,7 +178,6 @@ class RPSGame
   end
 
   def display_welcome_message
-    system "clear"
     m = "Hi #{human.name}, and welcome to Rock, Paper, Scissors, Lizard, Spock!"
     puts '-' * m.length
     puts m
@@ -162,10 +185,11 @@ class RPSGame
     puts "The winner will be the first player to #{WINS} wins."
     puts "Your opponent is a robot named #{computer.name}. Good luck!"
     puts '-' * m.length
+    hit_key
   end
 
   def display_moves
-    sleep 0.3
+    sleep 0.5
     puts "#{human.name} chose #{human.move}"
     puts "#{computer.name} chose #{computer.move}"
   end
@@ -191,19 +215,22 @@ class RPSGame
   end
 
   def hit_key
-    puts "hit any key to continue"
+    puts "hit enter to continue"
     gets.chomp
+  end
+
+  def scoreboard
+    hs = human.score
+    cs = computer.score
+    ht = human.ties
+    "SCORE => #{human.name}: #{hs}, #{computer.name}: #{cs}, ties: #{ht}"
   end
 
   def display_score
     system "clear"
-    hs = human.score
-    cs = computer.score
-    ht = human.ties
-    sc = "SCORE => #{human.name}: #{hs}, #{computer.name}: #{cs}, ties: #{ht}"
-    puts "-" * sc.length
-    puts sc
-    puts "-" * sc.length
+    puts "-" * scoreboard.length
+    puts scoreboard
+    puts "-" * scoreboard.length
   end
 
   def display_match_winner
@@ -280,13 +307,6 @@ class RPSGame
       hit_key
       break if game_over?
     end
-  end
-
-  def play
-    display_welcome_message
-    play_framework
-    display_history
-    display_goodbye_message
   end
 end
 
