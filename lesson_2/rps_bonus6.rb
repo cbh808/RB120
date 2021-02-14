@@ -119,17 +119,6 @@ class Computer < Player
     self.name = ['R2D77', 'eyeRobot', 'BadCompi', 'Dude808', 'DeepMud'].sample
   end
 
-  def probabilities
-    # ranges representing probabilities for each move in order [r, p, s, l, sp]
-    case name
-    when 'R2D77' then [(0..66), (67..69), (70..79), (80..89), (90..99)]
-    when 'eyeRobot' then [(0..19), (20..39), (40..59), (60..79), (80..99)]
-    when 'BadCompi' then [(0..0), (1..1), (2..2), (3..98), (99..99)]
-    when 'Dude808' then  [(0..32), (33..65), (66..99), (100..100), (100..100)]
-    when 'DeepMud' then [(0..0), (1..1), (2..2), (3..51), (52..99)]
-    end
-  end
-
   def choose
     random = rand(100)
     choice = nil
@@ -140,6 +129,19 @@ class Computer < Player
 
     self.move = find_move(choice)
     move_history << choice
+  end
+
+  private
+  
+  def probabilities
+    # ranges representing probabilities for each move in order [r, p, s, l, sp]
+    case name
+    when 'R2D77' then [(0..66), (67..69), (70..79), (80..89), (90..99)]
+    when 'eyeRobot' then [(0..19), (20..39), (40..59), (60..79), (80..99)]
+    when 'BadCompi' then [(0..0), (1..1), (2..2), (3..98), (99..99)]
+    when 'Dude808' then  [(0..32), (33..65), (66..99), (100..100), (100..100)]
+    when 'DeepMud' then [(0..0), (1..1), (2..2), (3..51), (52..99)]
+    end
   end
 end
 
