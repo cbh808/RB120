@@ -21,7 +21,6 @@ class Rock < Move
   private
 
   def losers
-    # ['lizard', 'scissors']
     [Lizard, Scissors]
   end
 end
@@ -215,6 +214,7 @@ class RPSGame
     else
       puts "It's a tie."
     end
+    hit_key
   end
 
   def hit_key
@@ -308,7 +308,6 @@ class RPSGame
       display_moves
       update_score
       display_winner
-      hit_key
       break if game_over?
     end
   end
