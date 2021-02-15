@@ -96,9 +96,8 @@ class Human < Player
     choice = nil
     loop do
       puts "Please choose: (r)ock, (p)aper, (s)cissors, (l)izard, or (sp)ock"
-      choice = gets.chomp
-      choice = refine_choice(choice) if Move::VALUES.include? choice
-      break if Move::VALUES.include? choice
+      choice = refine_choice(gets.chomp)
+      break if valid_choice?(choice)
       puts "Please make a valid choice."
     end
     move_history << choice
@@ -107,10 +106,18 @@ class Human < Player
 
   private
 
-  def refine_choice(str)
-    return str if str.size > 3
-    index = Move::VALUES.index(str)
-    Move::VALUES[index - 5]
+  def valid_choice?(choice)
+    Move::VALUES.include? choice
+  end
+
+  def refine_choice(choice)
+    if valid_choice?(choice)
+      return choice if choice.size > 3
+      index = Move::VALUES.index(choice)
+      Move::VALUES[index - 5]
+    else
+      choice
+    end
   end
 end
 
