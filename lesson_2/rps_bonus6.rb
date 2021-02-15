@@ -13,7 +13,7 @@ class Move
   end
 
   def >(other_move)
-    losers.include?(other_move)
+    losers.include?(other_move.class)
   end
 end
 
@@ -21,7 +21,8 @@ class Rock < Move
   private
 
   def losers
-    ['lizard', 'scissors']
+    # ['lizard', 'scissors']
+    [Lizard, Scissors]
   end
 end
 
@@ -29,7 +30,7 @@ class Paper < Move
   private
 
   def losers
-    ['rock', 'spock']
+    [Rock, Spock]
   end
 end
 
@@ -37,7 +38,7 @@ class Scissors < Move
   private
 
   def losers
-    ['lizard', 'paper']
+    [Lizard, Paper]
   end
 end
 
@@ -45,7 +46,7 @@ class Lizard < Move
   private
 
   def losers
-    ['spock', 'paper']
+    [Spock, Paper]
   end
 end
 
@@ -53,7 +54,7 @@ class Spock < Move
   private
 
   def losers
-    ['rock', 'scissors']
+    [Rock, Scissors]
   end
 end
 
@@ -132,7 +133,7 @@ class Computer < Player
   end
 
   private
-  
+
   def probabilities
     # ranges representing probabilities for each move in order [r, p, s, l, sp]
     case name
@@ -197,9 +198,9 @@ class RPSGame
   end
 
   def update_score
-    if human.move > computer.move.value
+    if human.move > computer.move
       human.score += 1
-    elsif computer.move > human.move.value
+    elsif computer.move > human.move
       computer.score += 1
     else
       human.ties += 1
@@ -207,9 +208,9 @@ class RPSGame
   end
 
   def display_winner
-    if human.move > computer.move.value
+    if human.move > computer.move
       puts "#{human.name} won!"
-    elsif computer.move > human.move.value
+    elsif computer.move > human.move
       puts "#{computer.name} won!"
     else
       puts "It's a tie."
@@ -301,6 +302,7 @@ class RPSGame
   def game_loop
     loop do
       display_score
+      display_wisdom
       human.choose
       computer.choose
       display_moves
